@@ -52,4 +52,16 @@ public class LobbyManager : Photon.PunBehaviour
             PhotonNetwork.JoinRoom(inputField.text);
         }
     }
+
+    public override void OnJoinedRoom()
+    {
+        PhotonNetwork.LoadLevel(1);
+    }
+
+    // error handling
+    public override void OnPhotonJoinRoomFailed(object[] codeAndMsg)
+    {
+        panel.SetActive(false);
+    }
+
 }
