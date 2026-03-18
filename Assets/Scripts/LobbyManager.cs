@@ -2,43 +2,48 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class LobbyManager : Photon.PunBehaviour
 {
     public TMP_InputField inputField;
     public GameObject panel;
-    bool isCreateRoom;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    bool connectedToMaster;
+    bool createRoom;
 
     public void CreateRoom()
     {
-        panel.SetActive(false);
-        isCreateRoom = true;
-        PhotonNetwork.sendRate = 120;
+        createRoom = true;
+        panel.SetActive(true);
+        if (connectedToMaster)
+        {
+            PhotonNetwork.CreateRoom(inputField.text);
+            return;
+        }
         PhotonNetwork.ConnectUsingSettings("1.0.0");
     }
 
     public void JoinRoom()
     {
-        panel.SetActive(false);
-        isCreateRoom = false;
-        PhotonNetwork.sendRate = 120;
+        createRoom = false;
+        panel.SetActive(true);
+        if (connectedToMaster)
+        {
+            PhotonNetwork.JoinRoom(inputField.text);
+            return;
+        }
         PhotonNetwork.ConnectUsingSettings("1.0.0");
     }
 
     public override void OnConnectedToMaster()
     {
+        connectedToMaster = true;
         PhotonNetwork.JoinLobby();
     }
 
     public override void OnJoinedLobby()
     {
-        if (isCreateRoom)
+        if (createRoom)
         {
             PhotonNetwork.CreateRoom(inputField.text);
         }
@@ -46,10 +51,5 @@ public class LobbyManager : Photon.PunBehaviour
         {
             PhotonNetwork.JoinRoom(inputField.text);
         }
-    }
-
-    public override void OnJoinedRoom()
-    {
-        PhotonNetwork.LoadLevel(2);
     }
 }
