@@ -6,6 +6,8 @@ using TMPro;
 public class LobbyManager : Photon.PunBehaviour
 {
     public TMP_InputField inputField;
+    public GameObject panel;
+    bool isCreateRoom;
 
     // Start is called before the first frame update
     void Start()
@@ -15,18 +17,33 @@ public class LobbyManager : Photon.PunBehaviour
 
     public void CreateRoom()
     {
-        PhotonNetwork.CreateRoom(inputField.text);
+        isCreateRoom = true;
+        PhotonNetwork.sendRate = 120;
+        PhotonNetwork.ConnectUsingSettings("1.0.0");
     }
 
     public void JoinRoom()
     {
-        PhotonNetwork.JoinRoom(inputField.text);
+        isCreateRoom = false;
+        PhotonNetwork.sendRate = 120;
+        PhotonNetwork.ConnectUsingSettings("1.0.0");
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void OnConnectedToMaster()
     {
-        
+        PhotonNetwork.JoinLobby();
+    }
+
+    public override void OnJoinedLobby()
+    {
+        if (isCreateRoom)
+        {
+            PhotonNetwork.CreateRoom(inputField.text);
+        }
+        else
+        {
+            PhotonNetwork.JoinRoom(inputField.text);
+        }
     }
 
     public override void OnJoinedRoom()
