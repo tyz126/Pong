@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class Ball : MonoBehaviour//, IPunObservable
+public class Ball : MonoBehaviour, IPunObservable
 {
     float speed;
     Rigidbody2D rb;
@@ -40,34 +40,28 @@ public class Ball : MonoBehaviour//, IPunObservable
     {
         if (collision.gameObject.tag == "Paddle")
         {
-            //rb.velocity = new Vector2(rb.velocity.normalized.x * -1, Mathf.InverseLerp(0, 1, collision.gameObject.transform.InverseTransformPoint(collision.GetContact(collision.contacts.Length - 1).point).y) * 0.45f);
-            //rb.velocity += Vector2.one * speedMultiplier;
+             collision.gameObject.transform.InverseTransformPoint(collision.GetContact(collision.contacts.Length - 1).point);
             Debug.Log(rb.velocity);
             Debug.Log(rb.velocity.magnitude);
         }
     }
 
-    /*public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        Debug.Log("idk");
         if (stream.isWriting)
         {
             stream.SendNext(rb.position);
-            stream.SendNext(rb.rotation);
             stream.SendNext(rb.velocity);
         }
         else
         {
-            rb.position = (Vector3)stream.ReceiveNext();
-            rb.rotation = (float)stream.ReceiveNext();
-            rb.velocity = (Vector3)stream.ReceiveNext();
-
-            Debug.Log("Fah");
+            rb.position = (Vector2)stream.ReceiveNext();
+            rb.velocity = (Vector2)stream.ReceiveNext();
 
             float lag = Mathf.Abs((float)(PhotonNetwork.time - info.timestamp));
             rb.position += rb.velocity * lag;
         }
-    }*/
+    }
 
     /*private void OnTriggerEnter2D(Collider2D collision)
     {
