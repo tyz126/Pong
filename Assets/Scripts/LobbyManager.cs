@@ -17,6 +17,7 @@ public class LobbyManager : Photon.PunBehaviour
 
     public void CreateRoom()
     {
+        panel.SetActive(false);
         isCreateRoom = true;
         PhotonNetwork.sendRate = 120;
         PhotonNetwork.ConnectUsingSettings("1.0.0");
@@ -24,6 +25,7 @@ public class LobbyManager : Photon.PunBehaviour
 
     public void JoinRoom()
     {
+        panel.SetActive(false);
         isCreateRoom = false;
         PhotonNetwork.sendRate = 120;
         PhotonNetwork.ConnectUsingSettings("1.0.0");
