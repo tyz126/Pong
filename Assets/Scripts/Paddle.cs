@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Paddle : MonoBehaviour
+public class Paddle : MonoBehaviour, IPunObservable
 {
     float speed;
     PhotonView photonView;
@@ -44,6 +44,23 @@ public class Paddle : MonoBehaviour
             {
                 rb.velocity = Vector2.zero;
             }
+        }
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.isWriting)
+        {
+            stream.SendNext(rb.position);
+            stream.SendNext(rb.velocity);
+        }
+        else
+        {
+            rb.position = (Vector2)stream.ReceiveNext();
+            rb.velocity = (Vector2)stream.ReceiveNext();
+
+            /*float lag = Mathf.Abs((float)(PhotonNetwork.time - info.timestamp));
+            rb.position += rb.velocity * lag;*/
         }
     }
 }

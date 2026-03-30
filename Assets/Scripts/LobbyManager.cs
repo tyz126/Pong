@@ -20,6 +20,8 @@ public class LobbyManager : Photon.PunBehaviour
             PhotonNetwork.CreateRoom(inputField.text);
             return;
         }
+        PhotonNetwork.sendRate = 60;
+        PhotonNetwork.sendRateOnSerialize = 60;
         PhotonNetwork.ConnectUsingSettings("1.0.0");
     }
 
@@ -32,6 +34,8 @@ public class LobbyManager : Photon.PunBehaviour
             PhotonNetwork.JoinRoom(inputField.text);
             return;
         }
+        PhotonNetwork.sendRate = 60;
+        PhotonNetwork.sendRateOnSerialize = 60;
         PhotonNetwork.ConnectUsingSettings("1.0.0");
     }
 

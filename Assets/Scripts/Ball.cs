@@ -40,7 +40,7 @@ public class Ball : MonoBehaviour, IPunObservable
     {
         if (collision.gameObject.tag == "Paddle")
         {
-             collision.gameObject.transform.InverseTransformPoint(collision.GetContact(collision.contacts.Length - 1).point);
+            collision.gameObject.transform.InverseTransformPoint(collision.GetContact(collision.contacts.Length - 1).point);
             Debug.Log(rb.velocity);
             Debug.Log(rb.velocity.magnitude);
         }
