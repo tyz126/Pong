@@ -660,12 +660,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: {fileID: 0}
-  canvas: {fileID: 0}
+  canvas: {fileID: 1791266346}
   paddlePrefab: {fileID: 1710788298079322274, guid: aa2652adfc599d14fae25cf230c3a661,
     type: 3}
   ballPrefab: {fileID: 8105121178480604096, guid: b9703e8fc9541a148a7eb50bc0aefbaf,
     type: 3}
-  scorePrefab: {fileID: 0}
+  scorePrefab: {fileID: 244474425334223528, guid: 5bfceef450548d349b11fdb14bc59a7a,
+    type: 3}
   ballSpeed: 7
   paddleSpeed: 10
 --- !u!4 &550926375
