@@ -77,6 +77,10 @@ public class Ball : MonoBehaviour, IPunObservable
         if (PhotonNetwork.player.IsMasterClient && rb.position.x > 0)
         {
             PhotonNetwork.player.AddScore(1);
+            foreach (var item in PhotonNetwork.playerList)
+            {
+                Debug.Log(item.GetScore());
+            }
             Debug.Log(PhotonNetwork.player.GetScore());
         }
         if (!PhotonNetwork.player.IsMasterClient && rb.position.x < 0)
@@ -84,10 +88,23 @@ public class Ball : MonoBehaviour, IPunObservable
             PhotonNetwork.player.AddScore(1);
             Debug.Log(PhotonNetwork.player.GetScore());
         }
+        rb.velocity = Vector2.zero;
+        rb.position = Vector2.zero;
+        UpdateText();
     }
 
-    void UpdateText(int score)
+    void UpdateText()
     {
-
+        foreach (var player in PhotonNetwork.playerList)
+        {
+            if (player.IsMasterClient)
+            {
+                GameController.instance.score1.GetComponent<TextMeshProUGUI>().text = player.GetScore().ToString();
+            }
+            else
+            {
+                GameController.instance.score2.GetComponent<TextMeshProUGUI>().text = player.GetScore().ToString();
+            }
+        }
     }
 }

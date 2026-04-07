@@ -6,12 +6,11 @@ using TMPro;
 
 public class GameController : MonoBehaviour
 {
-    public GameObject score;
-    public GameObject canvas;
     public GameObject paddlePrefab;
     public static GameController instance;
     public GameObject ballPrefab;
-    public GameObject scorePrefab;
+    public GameObject score1;
+    public GameObject score2;
     public float ballSpeed;
     public float paddleSpeed;
     // Start is called before the first frame update
@@ -28,14 +27,10 @@ public class GameController : MonoBehaviour
         if (PhotonNetwork.isMasterClient)
         {
             PhotonNetwork.Instantiate(paddlePrefab.name, new Vector2(-8f, 0f), Quaternion.identity, 0);
-            //score = PhotonNetwork.Instantiate(scorePrefab.name, new Vector2(-500, 460), Quaternion.identity, 0);
-            //score.transform.SetParent(canvas.transform);
             PhotonNetwork.Instantiate(ballPrefab.name, new Vector2(0f, 0f), Quaternion.identity, 0);
         }
         else
         {
-            //GameObject score = PhotonNetwork.Instantiate(scorePrefab.name, new Vector2(500, 460), Quaternion.identity, 0);
-            //score.transform.SetParent(canvas.transform);
             PhotonNetwork.Instantiate(paddlePrefab.name, new Vector2(8f, 0f), Quaternion.identity, 0);
         }
     }
