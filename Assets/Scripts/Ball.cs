@@ -74,12 +74,12 @@ public class Ball : MonoBehaviour, IPunObservable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (PhotonNetwork.player.IsMasterClient && rb.position.x < 0)
+        if (PhotonNetwork.player.IsMasterClient && rb.position.x > 0)
         {
             PhotonNetwork.player.AddScore(1);
             Debug.Log(PhotonNetwork.player.GetScore());
         }
-        if (!PhotonNetwork.player.IsMasterClient && rb.position.x > 0)
+        if (!PhotonNetwork.player.IsMasterClient && rb.position.x < 0)
         {
             PhotonNetwork.player.AddScore(1);
             Debug.Log(PhotonNetwork.player.GetScore());
