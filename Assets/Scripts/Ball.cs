@@ -10,6 +10,7 @@ public class Ball : MonoBehaviour, IPunObservable
     PhotonView photonView;
     public TextMeshProUGUI score1;
     public TextMeshProUGUI score2;
+    Vector3 lastVelocity;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +23,7 @@ public class Ball : MonoBehaviour, IPunObservable
     // Update is called once per frame
     void Update()
     {
+        lastVelocity = rb.velocity;
         if (photonView.isMine)
         {
             if (Input.GetKeyDown(KeyCode.Space))
@@ -44,6 +46,15 @@ public class Ball : MonoBehaviour, IPunObservable
             Debug.Log(rb.velocity);
             Debug.Log(rb.velocity.magnitude);
         }
+
+        //Make the ball bounce from wall... (You dk how it works...)
+        //if (collision.gameObject.tag == "CollisionBox")
+        //{
+            var speedWhenAction = lastVelocity.magnitude;
+            var direction = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
+
+            rb.velocity = direction * speedWhenAction;
+        //}
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
