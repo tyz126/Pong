@@ -29,14 +29,14 @@ public class GameController : MonoBehaviour
         {
             PhotonNetwork.Instantiate(paddlePrefab.name, new Vector2(-8f, 0f), Quaternion.identity, 0);
             score = PhotonNetwork.Instantiate(scorePrefab.name, new Vector2(-500, 460), Quaternion.identity, 0);
-            score.transform.SetParent(canvas.transform);
-            PhotonNetwork.Instantiate(ballPrefab.name, new Vector2(0f, 0f), Quaternion.identity, 0);
+            /*score.transform.SetParent(canvas.transform);
+            PhotonNetwork.Instantiate(ballPrefab.name, new Vector2(0f, 0f), Quaternion.identity, 0);*/
         }
         else
         {
             GameObject score = PhotonNetwork.Instantiate(scorePrefab.name, new Vector2(500, 460), Quaternion.identity, 0);
-            score.transform.SetParent(canvas.transform);
-            PhotonNetwork.Instantiate(paddlePrefab.name, new Vector2(8f, 0f), Quaternion.identity, 0);
+            /*score.transform.SetParent(canvas.transform);
+            PhotonNetwork.Instantiate(paddlePrefab.name, new Vector2(8f, 0f), Quaternion.identity, 0);*/
         }
     }
 
