@@ -8,8 +8,6 @@ public class Ball : MonoBehaviour, IPunObservable
     float speed;
     Rigidbody2D rb;
     PhotonView photonView;
-    public TextMeshProUGUI score1;
-    public TextMeshProUGUI score2;
     Vector3 lastVelocity;
 
     // Start is called before the first frame update
@@ -74,19 +72,22 @@ public class Ball : MonoBehaviour, IPunObservable
         }
     }
 
-    /*private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.transform.position.x > 0)
+        if (PhotonNetwork.player.IsMasterClient && rb.position.x < 0)
         {
-            score1.text = (System.Convert.ToInt32(score1.text) + 1).ToString();
-            transform.position = Vector2.zero;
-            rb.velocity = Quaternion.Euler(45, 0, 0) * Vector2.one * speed;
+            PhotonNetwork.player.AddScore(1);
+            Debug.Log(PhotonNetwork.player.GetScore());
         }
-        if (collision.gameObject.transform.position.x < 0)
+        if (!PhotonNetwork.player.IsMasterClient && rb.position.x > 0)
         {
-            score2.text = (System.Convert.ToInt32(score2.text) + 1).ToString();
-            transform.position = Vector2.zero;
-            rb.velocity = Quaternion.Euler(-45, 0, 0) * Vector2.one * speed;
+            PhotonNetwork.player.AddScore(1);
+            Debug.Log(PhotonNetwork.player.GetScore());
         }
-    }*/
+    }
+
+    void UpdateText(int score)
+    {
+
+    }
 }
