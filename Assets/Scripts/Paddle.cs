@@ -52,12 +52,12 @@ public class Paddle : MonoBehaviour, IPunObservable
         if (stream.isWriting)
         {
             stream.SendNext(rb.position);
-            stream.SendNext(rb.velocity);
+            stream.SendNext(rb.velocity.y);
         }
         else
         {
-            rb.position = (Vector2)stream.ReceiveNext();
-            rb.velocity = (Vector2)stream.ReceiveNext();
+            rb.position = Vector2.Lerp(rb.position, (Vector2)stream.ReceiveNext(), 0.7f);
+            rb.velocity = new Vector2(rb.velocity.x, (float)stream.ReceiveNext());
 
             /*float lag = Mathf.Abs((float)(PhotonNetwork.time - info.timestamp));
             rb.position += rb.velocity * lag;*/

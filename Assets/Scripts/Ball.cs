@@ -64,11 +64,11 @@ public class Ball : MonoBehaviour, IPunObservable
         }
         else
         {
-            rb.position = (Vector2)stream.ReceiveNext();
+            rb.position = Vector2.Lerp(rb.position, (Vector2)stream.ReceiveNext(), 0.7f);
             rb.velocity = (Vector2)stream.ReceiveNext();
 
-            float lag = Mathf.Abs((float)(PhotonNetwork.time - info.timestamp));
-            rb.position += rb.velocity * lag;
+            /*float lag = Mathf.Abs((float)(PhotonNetwork.time - info.timestamp));
+            rb.position += rb.velocity * lag;*/
         }
     }
 
@@ -101,7 +101,7 @@ public class Ball : MonoBehaviour, IPunObservable
             {
                 GameController.instance.score1.GetComponent<TextMeshProUGUI>().text = player.GetScore().ToString();
             }
-            else
+            if (!player.IsMasterClient)
             {
                 GameController.instance.score2.GetComponent<TextMeshProUGUI>().text = player.GetScore().ToString();
             }
