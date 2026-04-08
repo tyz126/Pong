@@ -64,7 +64,7 @@ public class Ball : MonoBehaviour, IPunObservable
         }
         else
         {
-            rb.position = Vector2.Lerp(rb.position, (Vector2)stream.ReceiveNext(), 0.7f);
+            rb.position = Vector2.Lerp(rb.position, (Vector2)stream.ReceiveNext(), 0.9f);
             rb.velocity = (Vector2)stream.ReceiveNext();
 
             /*float lag = Mathf.Abs((float)(PhotonNetwork.time - info.timestamp));
