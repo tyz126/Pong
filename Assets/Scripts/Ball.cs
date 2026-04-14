@@ -48,10 +48,9 @@ public class Ball : MonoBehaviour, IPunObservable
         //Make the ball bounce from wall... (You dk how it works...)
         //if (collision.gameObject.tag == "CollisionBox")
         //{
-            var speedWhenAction = lastVelocity.magnitude;
-            var direction = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
-
-            rb.velocity = direction * speedWhenAction;
+        var speedWhenAction = lastVelocity.magnitude;
+        var direction = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
+        rb.velocity = direction * speedWhenAction;
         //}
     }
 
@@ -74,25 +73,28 @@ public class Ball : MonoBehaviour, IPunObservable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (PhotonNetwork.player.IsMasterClient && rb.position.x > 0)
+        if (PhotonNetwork.isMasterClient)
         {
-            PhotonNetwork.player.AddScore(1);
-            foreach (var item in PhotonNetwork.playerList)
+            foreach (var player in PhotonNetwork.playerList)
             {
-                Debug.Log(item.GetScore());
+                if (player.IsMasterClient && rb.position.x > 0)
+                {
+                    player.AddScore(1);
+                    Debug.Log(PhotonNetwork.player.GetScore());
+                }
+                if (!player.IsMasterClient && rb.position.x < 0)
+                {
+                    player.AddScore(1);
+                    Debug.Log(PhotonNetwork.player.GetScore());
+                }
             }
-            Debug.Log(PhotonNetwork.player.GetScore());
-        }
-        if (!PhotonNetwork.player.IsMasterClient && rb.position.x < 0)
-        {
-            PhotonNetwork.player.AddScore(1);
-            Debug.Log(PhotonNetwork.player.GetScore());
         }
         rb.velocity = Vector2.zero;
         rb.position = Vector2.zero;
-        UpdateText();
+        PhotonNetwork.RPC(photonView, "UpdateText", PhotonTargets.All, false);
     }
 
+    [PunRPC]
     void UpdateText()
     {
         foreach (var player in PhotonNetwork.playerList)
