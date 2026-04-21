@@ -9,6 +9,8 @@ public class Ball : MonoBehaviour, IPunObservable
     Rigidbody2D rb;
     PhotonView photonView;
     Vector3 lastVelocity;
+    bool isMasterClientWon;
+    public float speedMultiplier;
 
     // Start is called before the first frame update
     void Start()
@@ -24,9 +26,9 @@ public class Ball : MonoBehaviour, IPunObservable
         lastVelocity = rb.velocity;
         if (photonView.isMine)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && rb.velocity.magnitude == 0)
             {
-                rb.velocity = Quaternion.Euler(Random.Range(0, 2) == 0 ? 45 : -45, 0, 0) * Vector2.one * speed;
+                rb.velocity = Quaternion.Euler(isMasterClientWon ? 45 : -45, 0, 0) * Vector2.one * speed;
             }
         }
     }
@@ -38,6 +40,7 @@ public class Ball : MonoBehaviour, IPunObservable
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        rb.AddForce(rb.velocity.normalized * speedMultiplier);
         if (collision.gameObject.tag == "Paddle")
         {
             collision.gameObject.transform.InverseTransformPoint(collision.GetContact(collision.contacts.Length - 1).point);
@@ -79,11 +82,13 @@ public class Ball : MonoBehaviour, IPunObservable
             {
                 if (player.IsMasterClient && rb.position.x > 0)
                 {
+                    isMasterClientWon = true;
                     player.AddScore(1);
                     Debug.Log(PhotonNetwork.player.GetScore());
                 }
                 if (!player.IsMasterClient && rb.position.x < 0)
                 {
+                    isMasterClientWon = false;
                     player.AddScore(1);
                     Debug.Log(PhotonNetwork.player.GetScore());
                 }
