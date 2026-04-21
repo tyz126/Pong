@@ -28,7 +28,7 @@ public class Ball : MonoBehaviour, IPunObservable
         {
             if (Input.GetKeyDown(KeyCode.Space) && rb.velocity.magnitude == 0)
             {
-                rb.velocity = Quaternion.Euler(isMasterClientWon ? 45 : -45, 0, 0) * Vector2.one * speed;
+                rb.velocity = Quaternion.Euler(isMasterClientWon ? 45 : 315, 0, 0) * Vector2.one * speed;
             }
         }
     }
@@ -44,17 +44,17 @@ public class Ball : MonoBehaviour, IPunObservable
         if (collision.gameObject.tag == "Paddle")
         {
             collision.gameObject.transform.InverseTransformPoint(collision.GetContact(collision.contacts.Length - 1).point);
-            Debug.Log(rb.velocity);
-            Debug.Log(rb.velocity.magnitude);
+            rb.velocity = Quaternion.AngleAxis(45, Vector3.back) * collision.contacts[0].normal * rb.velocity.magnitude;
         }
 
         //Make the ball bounce from wall... (You dk how it works...)
-        //if (collision.gameObject.tag == "CollisionBox")
-        //{
-        var speedWhenAction = lastVelocity.magnitude;
-        var direction = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
-        rb.velocity = direction * speedWhenAction;
-        //}
+        if (collision.gameObject.tag == "CollisionBox")
+        {
+            var speedWhenAction = lastVelocity.magnitude;
+            var direction = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
+            Debug.Log(collision.contacts[0].normal);
+            rb.velocity = direction * speedWhenAction;
+        }
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
