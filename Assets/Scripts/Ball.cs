@@ -44,7 +44,8 @@ public class Ball : MonoBehaviour, IPunObservable
         if (collision.gameObject.tag == "Paddle")
         {
             collision.gameObject.transform.InverseTransformPoint(collision.GetContact(collision.contacts.Length - 1).point);
-            rb.velocity = Quaternion.AngleAxis(45, Vector3.back) * collision.contacts[0].normal * rb.velocity.magnitude;
+            //                                     Ensure rotation is not flip on the other side.
+            rb.velocity = Quaternion.AngleAxis(45, rb.position.x > 0 ? Vector3.back : Vector3.forward) * collision.contacts[0].normal * rb.velocity.magnitude;
         }
 
         //Make the ball bounce from wall... (You dk how it works...)
