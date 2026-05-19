@@ -45,7 +45,7 @@ public class Ball : MonoBehaviour, IPunObservable
         {
             collision.gameObject.transform.InverseTransformPoint(collision.GetContact(collision.contacts.Length - 1).point);
             //                                     Ensure rotation is not flip on the other side.
-            rb.velocity = (Quaternion.AngleAxis(45, rb.position.x > 0 ? Vector3.back : Vector3.forward) * collision.contacts[0].normal) * Vector2.one * (rb.velocity.magnitude * speedMultiplier);
+            rb.velocity = (Quaternion.AngleAxis(22.5f, rb.position.x > 0 ? Vector3.back : Vector3.forward) * collision.contacts[0].normal) * (rb.velocity.magnitude * speedMultiplier);
         }
 
         //Make the ball bounce from wall... (You dk how it works...)
