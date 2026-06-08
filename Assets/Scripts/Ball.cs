@@ -3,19 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class Ball : MonoBehaviour, IPunObservable
+public class Ball : MonoBehaviour
 {
     float speed;
     Rigidbody2D rb;
-    PhotonView photonView;
-    Vector3 lastVelocity;
-    bool isMasterClientWon;
+    Vector2 lastVelocity;
     public float speedMultiplier;
+    bool isHostWon;
 
     // Start is called before the first frame update
     void Start()
     {
-        photonView = GetComponent<PhotonView>();
         rb = GetComponent<Rigidbody2D>();
         speed = GameController.instance.ballSpeed;
     }
@@ -23,19 +21,11 @@ public class Ball : MonoBehaviour, IPunObservable
     // Update is called once per frame
     void Update()
     {
-        lastVelocity = rb.velocity;
-        if (photonView.isMine)
-        {
             if (Input.GetKeyDown(KeyCode.Space) && rb.velocity.magnitude == 0)
             {
-                rb.velocity = Quaternion.Euler(isMasterClientWon ? 45 : 315, 0, 0) * Vector2.one * speed;
+                rb.velocity = Quaternion.Euler(0, 0, isHostWon ? 45 : -45) * Vector2.up * speed;
+                lastVelocity = rb.velocity;
             }
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -43,76 +33,40 @@ public class Ball : MonoBehaviour, IPunObservable
         //rb.AddForce(rb.velocity.normalized * speedMultiplier);
         if (collision.gameObject.tag == "Paddle")
         {
+            float angle = 180 * collision.gameObject.transform.InverseTransformPoint(collision.GetContact(collision.contacts.Length - 1).point).y * GameController.instance.angleMultiplier;
             collision.gameObject.transform.InverseTransformPoint(collision.GetContact(collision.contacts.Length - 1).point);
-            //                                     Ensure rotation is not flip on the other side.
-            rb.velocity = (Quaternion.AngleAxis(22.5f, rb.position.x > 0 ? Vector3.back : Vector3.forward) * collision.contacts[0].normal).normalized * (rb.velocity.magnitude * speedMultiplier);
+            rb.velocity = Quaternion.Euler(0, 0, rb.position.x > 0 ? -angle : angle) * collision.contacts[0].normal * (speed + speedMultiplier);
+            GameController.instance.paddleSpeed += 1;
+            speed += 1;
         }
 
         //Make the ball bounce from wall... (You dk how it works...)
         if (collision.gameObject.tag == "CollisionBox")
         {
-            var speedWhenAction = lastVelocity.magnitude;
             var direction = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
-            Debug.Log(collision.contacts[0].normal);
-            rb.velocity = direction * speedWhenAction;
+            rb.velocity = direction * lastVelocity.magnitude;
         }
+
+        lastVelocity = rb.velocity;
     }
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (stream.isWriting)
-        {
-            stream.SendNext(rb.position);
-            stream.SendNext(rb.velocity);
-        }
-        else
-        {
-            rb.position = Vector2.Lerp(rb.position, (Vector2)stream.ReceiveNext(), 0.9f);
-            rb.velocity = (Vector2)stream.ReceiveNext();
 
-            /*float lag = Mathf.Abs((float)(PhotonNetwork.time - info.timestamp));
-            rb.position += rb.velocity * lag;*/
-        }
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (PhotonNetwork.isMasterClient)
+        if (rb.position.x > 0)
         {
-            foreach (var player in PhotonNetwork.playerList)
-            {
-                if (player.IsMasterClient && rb.position.x > 0)
-                {
-                    isMasterClientWon = true;
-                    player.AddScore(1);
-                    Debug.Log(PhotonNetwork.player.GetScore());
-                }
-                if (!player.IsMasterClient && rb.position.x < 0)
-                {
-                    isMasterClientWon = false;
-                    player.AddScore(1);
-                    Debug.Log(PhotonNetwork.player.GetScore());
-                }
-            }
+            GameController.instance.score1.text = (int.Parse(GameController.instance.score1.text) + 1).ToString();
+            isHostWon = true;
+        }
+        if (rb.position.x < 0)
+        {
+            GameController.instance.score2.text = (int.Parse(GameController.instance.score2.text) + 1).ToString();
+            isHostWon = false;
         }
         rb.velocity = Vector2.zero;
         rb.position = Vector2.zero;
-        PhotonNetwork.RPC(photonView, "UpdateText", PhotonTargets.All, false);
-    }
-
-    [PunRPC]
-    void UpdateText()
-    {
-        foreach (var player in PhotonNetwork.playerList)
-        {
-            if (player.IsMasterClient)
-            {
-                GameController.instance.score1.GetComponent<TextMeshProUGUI>().text = player.GetScore().ToString();
-            }
-            if (!player.IsMasterClient)
-            {
-                GameController.instance.score2.GetComponent<TextMeshProUGUI>().text = player.GetScore().ToString();
-            }
-        }
+        GameController.instance.paddleSpeed = 12;
+        speed = 10;
     }
 }

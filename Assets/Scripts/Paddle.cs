@@ -2,18 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Paddle : MonoBehaviour, IPunObservable
+public class Paddle : MonoBehaviour
 {
-    float speed;
-    PhotonView photonView;
     Rigidbody2D rb;
 
     // Start is called before the first frame update
     void Start()
     {
-        photonView = GetComponent<PhotonView>();
         rb = GetComponent<Rigidbody2D>();
-        speed = GameController.instance.paddleSpeed;
     }
 
     // Update is called once per frame
@@ -30,37 +26,25 @@ public class Paddle : MonoBehaviour, IPunObservable
                 transform.Translate(Vector2.down * speed * Time.deltaTime);
             }
         }*/
-        if (photonView.isMine)
+        if (Input.GetKey(KeyCode.W) && rb.position.x <= 0)
         {
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
-            {
-                rb.velocity = Vector2.up * speed;
-            }
-            else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-            {
-                rb.velocity = Vector2.down * speed;
-            }
-            else
-            {
-                rb.velocity = Vector2.zero;
-            }
+            rb.velocity = Vector2.up * GameController.instance.paddleSpeed;
         }
-    }
-
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (stream.isWriting)
+        else if (Input.GetKey(KeyCode.S) && rb.position.x <= 0)
         {
-            stream.SendNext(rb.position);
-            stream.SendNext(rb.velocity.y);
+             rb.velocity = Vector2.down * GameController.instance.paddleSpeed;
+        }
+        else if (Input.GetKey(KeyCode.UpArrow) && rb.position.x >= 0)
+        {
+            rb.velocity = Vector2.up * GameController.instance.paddleSpeed;
+        }
+        else if (Input.GetKey(KeyCode.DownArrow) && rb.position.x >= 0)
+        {
+            rb.velocity = Vector2.down * GameController.instance.paddleSpeed;
         }
         else
         {
-            rb.position = Vector2.Lerp(rb.position, (Vector2)stream.ReceiveNext(), 0.9f);
-            rb.velocity = new Vector2(rb.velocity.x, (float)stream.ReceiveNext());
-
-            /*float lag = Mathf.Abs((float)(PhotonNetwork.time - info.timestamp));
-            rb.position += rb.velocity * lag;*/
-        }
+            rb.velocity = Vector2.zero;
+        }    
     }
 }
