@@ -35,9 +35,9 @@ public class Ball : MonoBehaviour
         {
             float angle = 180 * collision.gameObject.transform.InverseTransformPoint(collision.GetContact(collision.contacts.Length - 1).point).y * GameController.instance.angleMultiplier;
             collision.gameObject.transform.InverseTransformPoint(collision.GetContact(collision.contacts.Length - 1).point);
-            rb.velocity = Quaternion.Euler(0, 0, rb.position.x > 0 ? -angle : angle) * collision.contacts[0].normal * (speed + speedMultiplier);
+            rb.velocity = Quaternion.Euler(0, 0, rb.position.x > 0 ? -angle : angle) * collision.contacts[0].normal * speed;
             GameController.instance.paddleSpeed += 1;
-            speed += 1;
+            speed += speedMultiplier;
         }
 
         //Make the ball bounce from wall... (You dk how it works...)
@@ -67,6 +67,6 @@ public class Ball : MonoBehaviour
         rb.velocity = Vector2.zero;
         rb.position = Vector2.zero;
         GameController.instance.paddleSpeed = 12;
-        speed = 10;
+        speed = GameController.instance.ballSpeed;
     }
 }
