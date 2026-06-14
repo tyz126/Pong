@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 using TMPro;
 
 public class Ball : MonoBehaviour
@@ -38,13 +39,15 @@ public class Ball : MonoBehaviour
             rb.velocity = Quaternion.Euler(0, 0, rb.position.x > 0 ? -angle : angle) * collision.contacts[0].normal * speed;
             GameController.instance.paddleSpeed += 1;
             speed += speedMultiplier;
+            GameController.instance.PlaySound(0);
         }
 
-        //Make the ball bounce from wall... (You dk how it works...)
+        //Make the ball bounce from wall... (You dk how it works...) now you know...
         if (collision.gameObject.tag == "CollisionBox")
         {
             var direction = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
             rb.velocity = direction * lastVelocity.magnitude;
+            GameController.instance.PlaySound(1);
         }
 
         lastVelocity = rb.velocity;
@@ -66,7 +69,8 @@ public class Ball : MonoBehaviour
         }
         rb.velocity = Vector2.zero;
         rb.position = Vector2.zero;
-        GameController.instance.paddleSpeed = 12;
+        GameController.instance.paddleSpeed = File.Exists(Application.dataPath + "\\settings.json") ? JsonUtility.FromJson<SettingsManager.Settings>(File.ReadAllText(Application.dataPath + "\\settings.json")).initialPaddleSpeed : 12;
         speed = GameController.instance.ballSpeed;
+        GameController.instance.PlaySound(2);
     }
 }

@@ -793,7 +793,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 513086001}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1547942522}
+        m_MethodName: ChangeScene
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &513086001
@@ -1331,6 +1342,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: feb820a4089e9a64b8fa0fa444a22828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mixer: {fileID: 24100000, guid: 5723d431d1acbc4438ad9e0a62cc6f09, type: 2}
 --- !u!4 &1547942523
 Transform:
   m_ObjectHideFlags: 0
@@ -1483,6 +1495,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2013956787}
   - component: {fileID: 2013956786}
+  - component: {fileID: 2013956788}
   m_Layer: 0
   m_Name: Sound
   m_TagString: Untagged
@@ -1499,9 +1512,10 @@ AudioSource:
   m_GameObject: {fileID: 2013956785}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 5723d431d1acbc4438ad9e0a62cc6f09,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: d0782205736fb2740aebbee3430fb9ec, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -1600,3 +1614,15 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2013956788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013956785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e41eef4b1220349806735b1b3e1379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
