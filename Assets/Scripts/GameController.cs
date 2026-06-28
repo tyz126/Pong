@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
-{
-    public GameObject paddlePrefab;
+{   public GameObject paddlePrefab;
     public static GameController instance;
     public GameObject ballPrefab;
     public TextMeshProUGUI score1;
@@ -16,6 +16,10 @@ public class GameController : MonoBehaviour
     public float paddleSpeed;
     public float angleMultiplier;
     public AudioClip[] audioClips;
+    public GameObject pauseMenu;
+    public GameObject winScreen;
+    public TextMeshProUGUI winScreenText;
+    public GameObject pauseButton;
 
     AudioSource audioSource;
     // Start is called before the first frame update
@@ -51,5 +55,24 @@ public class GameController : MonoBehaviour
     {
         audioSource.clip = audioClips[i];
         audioSource.Play();
+    }
+
+    public void BackToGame()
+    {
+        Time.timeScale = 1;
+        pauseMenu.SetActive(false);
+    }
+
+    public void Pause()
+    {
+        Time.timeScale = 0;
+        pauseMenu.SetActive(true);
+    }
+
+    public void QuitToTitle()
+    {
+        Time.timeScale = 1;
+        BackgroundMusic.instance.StartMusic();
+        SceneManager.LoadScene(0);
     }
 }
